@@ -3,8 +3,11 @@ package mttb.rest;
 import mttb.domain.Card;
 import mttb.domain.Cardindeck;
 import mttb.domain.Deck;
+import mttb.domain.Decktype;
+import mttb.dto.CardOutDTO;
 import mttb.dto.DeckInDTO;
 import mttb.dto.DeckOutDTO;
+import mttb.dto.DecktypeDTO;
 import mttb.service.DeckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,29 @@ public class DeckController {
     @Autowired
     private DeckService deckService;
 
+    @GetMapping("")
+    public List<DeckOutDTO> getAll() {
+        List<Deck> decks = deckService.getAll();
+        List<DeckOutDTO> outDTOs = new ArrayList<>();
+
+        for (Deck deck : decks) {
+            DeckOutDTO outDTO = new DeckOutDTO();
+            outDTO.setIddeck(deck.getIddeck());
+            outDTO.setNameDeck(deck.getNamedeck());
+            outDTO.setPlayer(deck.getPlayer());
+            outDTO.setDecktype(deck.getDecktype());
+            outDTO.setColors(deck.getDeckcolors().stream().toList());
+
+            List<CardOutDTO> cards = new ArrayList<>();
+            for (Cardindeck cardindeck : deck.getCardsindeck()) {
+                cards.add(new CardOutDTO(cardindeck.getCard(), cardindeck.isInsideboard(), cardindeck.getQuantity()));
+            }
+            outDTO.setCards(cards);
+            outDTOs.add(outDTO);
+        }
+        return outDTOs;
+    }
+
     @GetMapping("/{id}")
     public DeckOutDTO getById(@PathVariable Long id) {
         Deck deck = deckService.getById(id);
@@ -31,9 +57,9 @@ public class DeckController {
         outDTO.setDecktype(deck.getDecktype());
         outDTO.setColors(deck.getDeckcolors().stream().toList());
 
-        List<Card> cards = new ArrayList<>();
+        List<CardOutDTO> cards = new ArrayList<>();
         for (Cardindeck cardindeck : deck.getCardsindeck()) {
-            cards.add(cardindeck.getCard());
+            cards.add(new CardOutDTO(cardindeck.getCard(), cardindeck.isInsideboard(), cardindeck.getQuantity()));
         }
         outDTO.setCards(cards);
         return outDTO;
@@ -52,9 +78,9 @@ public class DeckController {
             outDTO.setDecktype(deck.getDecktype());
             outDTO.setColors(deck.getDeckcolors().stream().toList());
 
-            List<Card> cards = new ArrayList<>();
+            List<CardOutDTO> cards = new ArrayList<>();
             for (Cardindeck cardindeck : deck.getCardsindeck()) {
-                cards.add(cardindeck.getCard());
+                cards.add(new CardOutDTO(cardindeck.getCard(), cardindeck.isInsideboard(), cardindeck.getQuantity()));
             }
             outDTO.setCards(cards);
             outDTOs.add(outDTO);
@@ -72,9 +98,9 @@ public class DeckController {
         outDTO.setDecktype(deck.getDecktype());
         outDTO.setColors(deck.getDeckcolors().stream().toList());
 
-        List<Card> cards = new ArrayList<>();
+        List<CardOutDTO> cards = new ArrayList<>();
         for (Cardindeck cardindeck : deck.getCardsindeck()) {
-            cards.add(cardindeck.getCard());
+            cards.add(new CardOutDTO(cardindeck.getCard(), cardindeck.isInsideboard(), cardindeck.getQuantity()));
         }
         outDTO.setCards(cards);
         return outDTO;
@@ -90,17 +116,45 @@ public class DeckController {
         outDTO.setDecktype(deck.getDecktype());
         outDTO.setColors(deck.getDeckcolors().stream().toList());
 
-        List<Card> cards = new ArrayList<>();
+        List<CardOutDTO> cards = new ArrayList<>();
         for (Cardindeck cardindeck : deck.getCardsindeck()) {
-            cards.add(cardindeck.getCard());
+            cards.add(new CardOutDTO(cardindeck.getCard(), cardindeck.isInsideboard(), cardindeck.getQuantity()));
         }
         outDTO.setCards(cards);
         return outDTO;
     }
 
-    @GetMapping("/delete")
+    @GetMapping("/delete/{id}")
     public ResponseEntity<Long> delete(@PathVariable Long id) {
         deckService.delete(id);
         return new ResponseEntity<Long>(id, HttpStatus.OK);
+    }
+
+    @GetMapping("/types")
+    public List<Decktype> getAllTypes() {
+        return deckService.getAllTypes();
+    }
+
+    @GetMapping("/search/{decktype}")
+    public List<DeckOutDTO> searchByDecktype(@PathVariable String decktype) {
+        List<Deck> decks = deckService.searchByDecktype(decktype);
+        List<DeckOutDTO> outDTOs = new ArrayList<>();
+
+        for (Deck deck : decks) {
+            DeckOutDTO outDTO = new DeckOutDTO();
+            outDTO.setIddeck(deck.getIddeck());
+            outDTO.setNameDeck(deck.getNamedeck());
+            outDTO.setPlayer(deck.getPlayer());
+            outDTO.setDecktype(deck.getDecktype());
+            outDTO.setColors(deck.getDeckcolors().stream().toList());
+
+            List<CardOutDTO> cards = new ArrayList<>();
+            for (Cardindeck cardindeck : deck.getCardsindeck()) {
+                cards.add(new CardOutDTO(cardindeck.getCard(), cardindeck.isInsideboard(), cardindeck.getQuantity()));
+            }
+            outDTO.setCards(cards);
+            outDTOs.add(outDTO);
+        }
+        return outDTOs;
     }
 }

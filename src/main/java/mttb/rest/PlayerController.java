@@ -17,6 +17,11 @@ public class PlayerController {
     @Autowired
     private PlayerService playerService;
 
+    @GetMapping("")
+    public List<Player> getAll() {
+        return playerService.getAll();
+    }
+
     @GetMapping("/{id}")
     public Player getById(@PathVariable Long id) {
         return playerService.getById(id);

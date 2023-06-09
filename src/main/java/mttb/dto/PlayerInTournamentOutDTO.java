@@ -1,8 +1,11 @@
 package mttb.dto;
 
-public class PlayerInTournamentDTO {
-    private Long idplayer;
-    private Long iddeck;
+import mttb.domain.Deck;
+import mttb.domain.Player;
+
+public class PlayerInTournamentOutDTO {
+    private Player player;
+    private DeckOutDTO deck;
     private int position;
     private int points;
     private int pointsleague;
@@ -10,11 +13,11 @@ public class PlayerInTournamentDTO {
     private int losses;
     private int draws;
 
-    public PlayerInTournamentDTO() {}
+    public PlayerInTournamentOutDTO() {}
 
-    public PlayerInTournamentDTO(Long idplayer, Long iddeck, int position, int points, int pointsleague, int wins, int losses, int draws) {
-        this.idplayer = idplayer;
-        this.iddeck = iddeck;
+    public PlayerInTournamentOutDTO(Player player, DeckOutDTO deck, int position, int points, int pointsleague, int wins, int losses, int draws) {
+        this.player = player;
+        this.deck = deck;
         this.position = position;
         this.points = points;
         this.pointsleague = pointsleague;
@@ -23,20 +26,20 @@ public class PlayerInTournamentDTO {
         this.draws = draws;
     }
 
-    public Long getIdplayer() {
-        return idplayer;
+    public Player getPlayer() {
+        return player;
     }
 
-    public void setIdplayer(Long idplayer) {
-        this.idplayer = idplayer;
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
-    public Long getIddeck() {
-        return iddeck;
+    public DeckOutDTO getDeck() {
+        return deck;
     }
 
-    public void setIddeck(Long iddeck) {
-        this.iddeck = iddeck;
+    public void setDeck(DeckOutDTO deck) {
+        this.deck = deck;
     }
 
     public int getPosition() {

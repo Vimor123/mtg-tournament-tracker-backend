@@ -14,4 +14,10 @@ public interface TournamentService {
     Tournament create(LoginDTO dto, String nametournament, String tournamentstart,
                       String tournamentend, String format, Long idleague,
                       List<PlayerInTournamentDTO> players);
+
+    // Dohvat turnira
+    Tournament getById(Long id);
+
+    // Brisanje turnira
+    void delete(Long id, LoginDTO loginDTO);
 }

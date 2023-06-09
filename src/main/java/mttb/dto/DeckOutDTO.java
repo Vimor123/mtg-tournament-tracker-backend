@@ -13,13 +13,13 @@ public class DeckOutDTO {
     private Player player;
 
     private Decktype decktype;
-    private List<Card> cards;
+    private List<CardOutDTO> cards;
 
     private List<Color> colors;
 
     public DeckOutDTO() {}
 
-    public DeckOutDTO(Long iddeck, String nameDeck, Player player, Decktype decktype, List<Card> cards) {
+    public DeckOutDTO(Long iddeck, String nameDeck, Player player, Decktype decktype, List<CardOutDTO> cards) {
         this.iddeck = iddeck;
         this.nameDeck = nameDeck;
         this.player = player;
@@ -51,11 +51,11 @@ public class DeckOutDTO {
         this.player = player;
     }
 
-    public List<Card> getCards() {
+    public List<CardOutDTO> getCards() {
         return cards;
     }
 
-    public void setCards(List<Card> cards) {
+    public void setCards(List<CardOutDTO> cards) {
         this.cards = cards;
     }
 

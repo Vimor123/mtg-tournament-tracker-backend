@@ -36,6 +36,9 @@ public class TournamentServiceJpa implements TournamentService {
     @Autowired
     private TournamentRepository tournamentRepo;
 
+    @Autowired
+    private PlayerintournamentRepository playerintournamentRepo;
+
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
@@ -88,9 +91,9 @@ public class TournamentServiceJpa implements TournamentService {
             if (!playerRepo.existsById(playerintournament.getIdplayer())) {
                 throw new EntityMissingException(Player.class, playerintournament.getIdplayer());
             }
-            if (playerintournament.getPosition() != positionIndex) {
-                throw new RequestDeniedException("Incorrect player order");
-            }
+            //if (playerintournament.getPosition() != positionIndex) {
+            //    throw new RequestDeniedException("Incorrect player order");
+            //}
             if (!deckRepo.existsByIddeck(playerintournament.getIddeck())) {
                 throw new EntityMissingException(Deck.class, playerintournament.getIddeck());
             }
@@ -117,10 +120,47 @@ public class TournamentServiceJpa implements TournamentService {
             playerintournamentObject.setDraws(playerintournament.getDraws());
 
             playersintournament.add(playerintournamentObject);
+            playerintournamentRepo.save(playerintournamentObject);
         }
 
         newTournament.setPlayersintournament(playersintournament);
         tournamentRepo.save(newTournament);
         return newTournament;
+    }
+
+    @Override
+    public Tournament getById(Long id) {
+        Optional<Tournament> tournament = tournamentRepo.findById(id);
+        if (tournament.isEmpty()) {
+            throw new EntityMissingException(Tournament.class, id);
+        }
+        return tournament.get();
+    }
+
+    @Override
+    public void delete(Long id, LoginDTO loginDTO) {
+        Optional<Player> player = playerRepo.findByUsername(loginDTO.getUsername());
+        if (player.isEmpty()) {
+            throw new RequestDeniedException("Incorrect user credentials");
+        }
+
+        if (!passwordEncoder.matches(loginDTO.getPassword(), player.get().getPasswordhash())) {
+            throw new RequestDeniedException("Incorrect user credentials");
+        }
+
+        if (!player.get().isAdminprivileges()) {
+            throw new UnauthorizedAccessException("Unauthorized user");
+        }
+
+        Optional<Tournament> tournament = tournamentRepo.findById(id);
+        if (tournament.isEmpty()) {
+            throw new EntityMissingException(Tournament.class, id);
+        }
+
+        for (Playerintournament playerInTournament : tournament.get().getPlayersintournament()) {
+            playerintournamentRepo.delete(playerInTournament);
+        }
+
+        tournamentRepo.delete(tournament.get());
     }
 }

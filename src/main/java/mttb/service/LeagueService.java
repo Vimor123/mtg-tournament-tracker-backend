@@ -19,4 +19,13 @@ public interface LeagueService {
 
     // Dohvaćanje turnira u ligi
     List<Tournament> getLeagueTournaments(Long idleague);
+
+    // Pretraživanje ligi
+    List<League> searchByNameleague(String nameleague);
+
+    // Dohvaćanje svih ligi
+    List<League> getAll();
+
+    // Brisanje lige
+    void delete(Long id, LoginDTO loginDTO);
 }

@@ -9,9 +9,9 @@ public class LeagueOutDTO {
     private String nameleague;
     private String leaguestart;
     private String leagueend;
-    private List<Tournament> tournaments;
+    private List<TournamentOutDTO> tournaments;
 
-    public LeagueOutDTO(Long idleague, String nameleague, String leaguestart, String leagueend, List<Tournament> tournaments) {
+    public LeagueOutDTO(Long idleague, String nameleague, String leaguestart, String leagueend, List<TournamentOutDTO> tournaments) {
         this.idleague = idleague;
         this.nameleague = nameleague;
         this.leaguestart = leaguestart;
@@ -51,11 +51,11 @@ public class LeagueOutDTO {
         this.leagueend = leagueend;
     }
 
-    public List<Tournament> getTournaments() {
+    public List<TournamentOutDTO> getTournaments() {
         return tournaments;
     }
 
-    public void setTournaments(List<Tournament> tournaments) {
+    public void setTournaments(List<TournamentOutDTO> tournaments) {
         this.tournaments = tournaments;
     }
 }

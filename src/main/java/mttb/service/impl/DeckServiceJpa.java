@@ -8,7 +8,6 @@ import mttb.errors.EntityMissingException;
 import mttb.errors.RequestDeniedException;
 import mttb.service.DeckService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,6 +42,18 @@ public class DeckServiceJpa implements DeckService {
     private DecktypeRepository decktypeRepo;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    @Override
+    public List<Deck> getAll() {
+        List<Deck> allDecks = deckRepo.findAll();
+        List<Deck> currentDecks = new ArrayList<>();
+        for (Deck deck : allDecks) {
+            if (deck.isInuse()) {
+                currentDecks.add(deck);
+            }
+        }
+        return currentDecks;
+    }
 
     @Override
     public Deck getById(Long id) {
@@ -88,7 +99,7 @@ public class DeckServiceJpa implements DeckService {
         }
         deck.setDecktype(decktype.get());
 
-        deck.setInuse(true);
+        deck.setInuse(false);
 
         Deck newDeck = deckRepo.save(deck);
 
@@ -174,6 +185,8 @@ public class DeckServiceJpa implements DeckService {
 
         newDeck.setCardsindeck(cardsindeck);
         newDeck.setDeckcolors(deckcolors);
+
+        newDeck.setInuse(true);
 
         deckRepo.save(newDeck);
 
@@ -313,5 +326,24 @@ public class DeckServiceJpa implements DeckService {
         Deck oldDeck = oldDeckCheck.get();
         oldDeck.setInuse(false);
         deckRepo.save(oldDeck);
+    }
+
+    @Override
+    public List<Decktype> getAllTypes() {
+        return decktypeRepo.findAll();
+    }
+
+    @Override
+    public List<Deck> searchByDecktype(String decktype) {
+        List<Deck> allDecks = deckRepo.findAll();
+        List<Deck> matchingDecks = new ArrayList<>();
+
+        for (Deck deck : allDecks) {
+            if (deck.getDecktype().getNamedecktype().toLowerCase().contains(decktype.toLowerCase()) && deck.isInuse()) {
+                matchingDecks.add(deck);
+            }
+        }
+
+        return matchingDecks;
     }
 }

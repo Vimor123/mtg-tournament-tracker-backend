@@ -25,6 +25,11 @@ public class PlayerServiceJpa implements PlayerService {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
+    public List<Player> getAll() {
+        return playerRepo.findAll();
+    }
+
+    @Override
     public Player getById(Long id) {
         Optional<Player> player = playerRepo.findById(id);
         if (player.isEmpty()) {

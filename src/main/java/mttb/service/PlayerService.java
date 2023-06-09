@@ -23,4 +23,7 @@ public interface PlayerService {
     // Pretraživanje igrača
     List<Player> searchByUsername(String username);
 
+    // Dohvat svih igrača
+    List<Player> getAll();
+
 }
